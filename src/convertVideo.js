@@ -3,7 +3,7 @@ import ffmpeg from "ffmpeg-static";
 import ffmMT from "ffmetadata";
 import path from "path";
 import cp from "child_process";
-import chalk from "chalk";
+import { messageStart, messageProgress, finishDL } from "./utils/ProgressDownload.js";
 
 /* 
 This code does not belong to me. 
@@ -61,22 +61,17 @@ export const convertVideo = async (options) => {
             ],
         });
 
-        process.stdout.clearLine();
-        process.stdout.cursorTo(0);
-        process.stdout.write(chalk.yellow('The Download will start in a few seconds'))
+        messageStart();
 
         ffmpegProcess.stdio[3].on("data", () => {
             const videoTotal = (tracker.video.downloaded / tracker.video.total) * 100
             const audioTotal = (tracker.audio.downloaded / tracker.audio.total) * 100
             const percentage = Math.round((videoTotal + audioTotal) / 2).toString()
-            process.stdout.clearLine();
-            process.stdout.cursorTo(0);
-            process.stdout.write(`\u001b[35m name: ${name} \u001B[36m downloaded: ${percentage}%`)
+            messageProgress(percentage, name)
         })
 
         ffmpegProcess.on("close", () => {
-            console.clear();
-            console.log('\u001b[42;1m The Download Finished Successfully \u001b[0m');
+            finishDL()
         })
 
         audio.pipe(ffmpegProcess.stdio[4])

@@ -4,6 +4,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { getVideo } from "./src/getVideo.js";
 import { convertVideo } from "./src/convertVideo.js";
+import { downloadAudio } from "./src/downloadAudio.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -49,8 +50,10 @@ program.command('video').action(async () => {
     })
 })
 
-program.command('audio').action(()=> {
+program.command('audio').action(async () => {
     // create function for download song
+    const url = await stepOne();
+    await downloadAudio(url);
 })
 
 
