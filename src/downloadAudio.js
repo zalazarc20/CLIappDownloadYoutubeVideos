@@ -2,7 +2,7 @@ import ytdl from "ytdl-core";
 import fs from "fs";
 import { messageStart, messageProgress, finishDL } from "./utils/ProgressDownload.js";
 
-export const downloadAudio = async url => {
+export const downloadAudio = async (url, path) => {
     const info = await ytdl.getInfo(url);
     const name = info.videoDetails.title;
 
@@ -15,7 +15,7 @@ export const downloadAudio = async url => {
         messageProgress(percentage, name);
         
     });
-    audio.pipe(fs.createWriteStream(`./audios/${info.videoDetails.title}.mp3`))
-
-    finishDL();
+    audio.pipe(fs.createWriteStream(`${path}/${info.videoDetails.title}.mp3`)).on("close", () => {
+        finishDL();
+    })
 }

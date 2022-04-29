@@ -46,14 +46,14 @@ program.command('video').action(async () => {
     await convertVideo({
         url: url,
         itag: itag,
-        directoryDownload: `${__dirname}/videos`
+        directoryDownload: `${__dirname}/downloads/videos`
     })
 })
 
 program.command('audio').action(async () => {
     // create function for download song
     const url = await stepOne();
-    await downloadAudio(url);
+    await downloadAudio(url, `${__dirname}/downloads/audios`);
 })
 
 
